@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Flores para Você</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --stem-color: #2e7d32;
+      --leaf-color: #388e3c;
+      --red-tulip: #e63946;
+      --red-dark: #b81d24;
+      --white-tulip: #f8fafc;
+      --white-shadow: #cbd5e1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #fff;
+    }
+
+    /* Brilhos e Pétalas no fundo */
+    .stars, .petals-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .star {
+      position: absolute;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0.5;
+      animation: twinkle 3s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 0.9; transform: scale(1.2); }
+    }
+
+    /* Animação das Pétalas Voando */
+    .falling-petal {
+      position: absolute;
+      top: -10%;
+      border-radius: 50% 0 50% 50%;
+      opacity: 0.8;
+      animation: fall linear forwards;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg) translateX(0);
+        opacity: 0.8;
+      }
+      50% {
+        transform: translateY(50vh) rotate(180deg) translateX(30px);
+      }
+      100% {
+        transform: translateY(105vh) rotate(360deg) translateX(-30px);
+        opacity: 0.2;
+      }
+    }
+
+    /* Container Principal */
+    .container {
+      width: 100%;
+      max-width: 430px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 15px;
+      position: relative;
+      z-index: 2;
+    }
+
+    header {
+      text-align: center;
+      margin-top: 20px;
+      animation: fadeIn 2s ease-out;
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      font-weight: 300;
+      letter-spacing: 2px;
+      color: #f1f5f9;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    header p {
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-top: 5px;
+    }
+
+    /* Área das Tulipas */
+    .garden {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    .tulip-group {
+      position: absolute;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform-origin: bottom center;
+    }
+
+    /* Animação de crescimento e vento suave */
+    .tulip-1 { 
+      left: 20%; 
+      animation: grow1 2s ease-out forwards, sway1 4s ease-in-out infinite 2s; 
+    }
+    .tulip-2 { 
+      left: 42%; 
+      animation: grow2 2s ease-out forwards, sway2 5s ease-in-out infinite 2.2s; 
+    }
+    .tulip-3 { 
+      left: 65%; 
+      animation: grow3 2s ease-out forwards, sway3 4.5s ease-in-out infinite 2.4s; 
+    }
+
+    /* Caule */
+    .stem {
+      width: 8px;
+      height: 180px;
+      background: linear-gradient(to right, var(--stem-color), #4caf50);
+      border-radius: 4px;
+      position: relative;
+    }
+
+    /* Folhas */
+    .leaf {
+      position: absolute;
+      width: 30px;
+      height: 60px;
+      background: var(--leaf-color);
+      border-radius: 0 100px 0 100px;
+      bottom: 30px;
+    }
+
+    .leaf-left {
+      left: -22px;
+      transform: rotate(-25deg);
+    }
+
+    .leaf-right {
+      right: -22px;
+      transform: scaleX(-1) rotate(-25deg);
+    }
+
+    /* Pétalas da Tulipa */
+    .flower {
+      position: relative;
+      width: 60px;
+      height: 70px;
+      margin-bottom: -5px;
+    }
+
+    .petal {
+      position: absolute;
+      width: 36px;
+      height: 65px;
+      border-radius: 50% 50% 50% 50% / 80% 80% 20% 20%;
+    }
+
+    /* Tulipa Vermelha */
+    .red .petal {
+      background: linear-gradient(to top, var(--red-dark), var(--red-tulip));
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Tulipa Branca */
+    .white .petal {
+      background: linear-gradient(to top, var(--white-shadow), var(--white-tulip));
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .petal-center {
+      left: 12px;
+      top: 0;
+      z-index: 2;
+    }
+
+    .petal-left {
+      left: 0;
+      top: 5px;
+      transform: rotate(-18deg);
+      z-index: 3;
+    }
+
+    .petal-right {
+      right: 0;
+      top: 5px;
+      transform: rotate(18deg);
+      z-index: 3;
+    }
+
+    /* Botão e Carta */
+    .card-section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .btn-open {
+      background: linear-gradient(135deg, #e63946, #b81d24);
+      color: #fff;
+      border: none;
+      padding: 14px 28px;
+      font-size: 0.95rem;
+      border-radius: 30px;
+      box-shadow: 0 4px 15px rgba(230, 57, 70, 0.4);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-open:active {
+      transform: scale(0.95);
+    }
+
+    .message-card {
+      display: none;
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 22px;
+      margin-top: 15px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      animation: popup 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .message-card p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #f8fafc;
+      font-weight: 300;
+    }
+
+    /* Keyframes de crescimento */
+    @keyframes grow1 {
+      from { transform: scale(0) translateY(100px) rotate(-8deg); opacity: 0; }
+      to { transform: scale(0.85) rotate(-8deg); opacity: 1; }
+    }
+    @keyframes grow2 {
+      from { transform: scale(0) translateY(100px); opacity: 0; }
+      to { transform: scale(1.05); opacity: 1; }
+    }
+    @keyframes grow3 {
+      from { transform: scale(0) translateY(100px) rotate(8deg); opacity: 0; }
+      to { transform: scale(0.9) rotate(8deg); opacity: 1; }
+    }
+
+    /* Keyframes do balanço do vento */
+    @keyframes sway1 {
+      0%, 100% { transform: scale(0.85) rotate(-8deg); }
+      50% { transform: scale(0.85) rotate(-3deg); }
+    }
+    @keyframes sway2 {
+      0%, 100% { transform: scale(1.05) rotate(0deg); }
+      50% { transform: scale(1.05) rotate(4deg); }
+    }
+    @keyframes sway3 {
+      0%, 100% { transform: scale(0.9) rotate(8deg); }
+      50% { transform: scale(0.9) rotate(3deg); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popup {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stars" id="stars"></div>
+  <div class="petals-container" id="petals"></div>
+
+  <div class="container">
+    <header>
+      <h1>Para Alguém Especial</h1>
+      <p>Abra o cartão abaixo ✨</p>
+    </header>
+
+    <div class="garden">
+      <!-- Tulipa Vermelha 1 -->
+      <div class="tulip-group tulip-1">
+        <div class="flower red">
+          <div class="petal petal-center"></div>
+          <div class="petal petal-left"></div>
+          <div class="petal petal-right"></div>
+        </div>
+        <div class="stem">
+          <div class="leaf leaf-left"></div>
+        </div>
+      </div>
+
+      <!-- Tulipa Branca (Centro) -->
+      <div class="tulip-group tulip-2">
+        <div class="flower white">
+          <div class="petal petal-center"></div>
+          <div class="petal petal-left"></div>
+          <div class="petal petal-right"></div>
+        </div>
+        <div class="stem">
+          <div class="leaf leaf-left"></div>
+          <div class="leaf leaf-right"></div>
+        </div>
+      </div>
+
+      <!-- Tulipa Vermelha 2 -->
+      <div class="tulip-group tulip-3">
+        <div class="flower red">
+          <div class="petal petal-center"></div>
+          <div class="petal petal-left"></div>
+          <div class="petal petal-right"></div>
+        </div>
+        <div class="stem">
+          <div class="leaf leaf-right"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-section">
+      <button class="btn-open" onclick="openCard()">Ler mensagem 💌</button>
+      <div class="message-card" id="card">
+        <p>
+          "Dizem que as flores de verdade acabam murchando com o tempo... por isso decidi programar estas tulipas para você. Assim como o carinho que sinto por você, elas nunca vão perder o brilho. Espero que esse pequeno detalhe traga um sorriso ao seu dia!"
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Gerar estrelas/brilhos de fundo
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 40; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.width = Math.random() * 3 + 'px';
+      star.style.height = star.style.width;
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = Math.random() * 3 + 's';
+      starsContainer.appendChild(star);
+    }
+
+    // Gerar pétalas caindo de forma contínua
+    const petalsContainer = document.getElementById('petals');
+    const colors = ['#e63946', '#b81d24', '#f8fafc', '#ff758c'];
+
+    function createPetal() {
+      const petal = document.createElement('div');
+      petal.className = 'falling-petal';
+      
+      const size = Math.random() * 12 + 10; // Tamanho entre 10px e 22px
+      petal.style.width = size + 'px';
+      petal.style.height = size * 1.4 + 'px';
+      petal.style.left = Math.random() * 100 + '%';
+      
+      // Cor aleatória entre tons de vermelho e branco
+      petal.style.background = colors[Math.floor(Math.random() * colors.length)];
+      
+      const duration = Math.random() * 5 + 5; // Duração de 5s a 10s
+      petal.style.animationDuration = duration + 's';
+
+      petalsContainer.appendChild(petal);
+
+      setTimeout(() => {
+        petal.remove();
+      }, duration * 1000);
+    }
+
+    // Cria uma pétala a cada 400ms
+    setInterval(createPetal, 400);
+
+    // Revelar cartão
+    function openCard() {
+      const card = document.getElementById('card');
+      const btn = document.querySelector('.btn-open');
+      card.style.display = 'block';
+      btn.style.display = 'none';
+    }
+
+    // Criar brilhos mágicos ao tocar na tela (Mobile e Desktop)
+    function createSpark(x, y) {
+      const spark = document.createElement('div');
+      spark.style.position = 'fixed';
+      spark.style.left = x + 'px';
+      spark.style.top = y + 'px';
+      spark.style.width = '10px';
+      spark.style.height = '10px';
+      spark.style.background = '#fff';
+      spark.style.borderRadius = '50%';
+      spark.style.boxShadow = '0 0 10px #e63946, 0 0 20px #fff';
+      spark.style.pointerEvents = 'none';
+      spark.style.zIndex = '999';
+      spark.style.transition = 'transform 0.6s ease-out, opacity 0.6s ease-out';
+      
+      document.body.appendChild(spark);
+
+      setTimeout(() => {
+        spark.style.transform = 'scale(2.5) translateY(-20px)';
+        spark.style.opacity = '0';
+      }, 10);
+
+      setTimeout(() => {
+        spark.remove();
+      }, 600);
+    }
+
+    document.addEventListener('touchstart', function(e) {
+      createSpark(e.touches[0].clientX, e.touches[0].clientY);
+    });
+
+    document.addEventListener('click', function(e) {
+      createSpark(e.clientX, e.clientY);
+    });
+  </script>
+</body>
+</html>
